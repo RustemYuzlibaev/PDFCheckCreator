@@ -1,13 +1,11 @@
-const uuidv4 = require('uuid/v4');
-
 class Order {
-    constructor({ items, address, client }) {
-        this.id = uuidv4();
+    constructor({ id, items, address, client, pointId }) {
+        this.id = id;
         this.items = items;
         this.price = this.getOrderPrice();
         this.address = address;
         this.client = client;
-        this.point_id = 1;
+        this.pointId = pointId;
     }
 
     getOrderPrice() {
