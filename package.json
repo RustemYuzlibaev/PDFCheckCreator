@@ -4,18 +4,26 @@
     "description": "",
     "main": ".prettierrc.js",
     "scripts": {
-        "start": "node ./backend/server.js",
-        "dev": "nodemon ./backend/server.js"
+        "start": "concurrently \"npm run migrate && nodemon ./backend/server.js\" \"npm run frontend\"",
+        "dev": "npm run migrate && nodemon ./backend/server.js",
+        "frontend": "npm start --prefix frontend",
+        "migrate": "npm run printer && npm run bulkInsert && npm run check",
+        "printer": "npx sequelize-cli db:migrate --migrations-path ./migrations/foremost",
+        "bulkInsert": "npx sequelize-cli db:seed:all",
+        "check": "npx sequelize-cli db:migrate"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
         "body-parser": "^1.19.0",
+        "concurrently": "^4.1.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "pdfkit": "^0.10.0",
         "pg": "^7.11.0",
+        "sequelize": "^5.10.0",
+        "sequelize-cli": "^5.5.0",
         "uuid": "^3.3.2"
     },
     "devDependencies": {

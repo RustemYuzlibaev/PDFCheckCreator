@@ -20,13 +20,28 @@ class CheckTable {
         }
     }
 
-    static getChecks() {
+    static getNonPrintedChecks() {
         return new Promise((resolve, reject) => {
-            pool.query(`SELECT "order" FROM "check"`, (err, res) => {
-                if (err) reject(err);
+            pool.query(
+                `SELECT "order" FROM "check" WHERE "status" = 'new'`,
+                (err, res) => {
+                    if (err) reject(err);
+                    resolve(res.rows);
+                },
+            );
+        });
+    }
 
-                resolve(res.rows);
-            });
+    static setCheckToPrinted(id) {
+        return new Promise((resolve, reject) => {
+            pool.query(
+                `UPDATE "check" SET "status" = 'printed' WHERE CAST ("order" ->> 'id' AS INTEGER) = $1`,
+                [id],
+                (err, res) => {
+                    if (err) reject(err);
+                    resolve();
+                },
+            );
         });
     }
 }

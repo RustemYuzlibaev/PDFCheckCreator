@@ -4,7 +4,7 @@ const fs = require('fs');
 const cors = require('cors');
 const PDFDocument = require('pdfkit');
 const config = require('./config');
-const { generatePDFFiles } = require('./util/helpers');
+const { runGeneratePDFFiles } = require('./util/helpers');
 const app = express();
 
 const Client = require('./Schemas/Client');
@@ -14,6 +14,8 @@ const doc = new PDFDocument();
 app.use(cors());
 
 const jsonParser = bodyParser.json();
+
+runGeneratePDFFiles();
 
 app.post('/create_checks', jsonParser, (req, res) => {
     const { id, name, phone, address, pointId, items } = req.body;
@@ -27,10 +29,9 @@ app.post('/create_checks', jsonParser, (req, res) => {
     });
 
     CheckTable.createChecks(newOrder);
-
-    generatePDFFiles();
 });
 
 app.get('/check', (req, res) => {});
+app.get('/new_checks', (req, res) => {});
 
 app.listen(config.PORT, () => console.log(`Listening on port ${config.PORT}`));
